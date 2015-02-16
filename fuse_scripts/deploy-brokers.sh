@@ -12,7 +12,7 @@ for i in ${BROKER_HOSTS[@]}; do
         wait_for_container application-broker-$host_num
 done
 
-printf -v CONTAINER_COMMAND "mq-create --config application.broker.config.xml --assign-container application-broker-1,application-broker-2 --group application-brokers application-broker"
+printf -v CONTAINER_COMMAND "mq-create --config application.broker.config.xml --assign-container broker-1,broker-2 --group application-brokers application-broker"
 
 # TODO: optimize this to use fabric client commands to determing availability of nitro broker.
 echo "Sleeping for 90 sec to allow for broker creation..."

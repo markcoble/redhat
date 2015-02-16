@@ -40,6 +40,5 @@ export JAVA_HOME=/usr/lib/jvm/java-1.7.0
 export JVM_GC_OPTS="-XX:+UseG1GC"
 export JVM_AGENT_OPTS="-javaagent:/opt/rh/newrelic/newrelic.jar"
 export JVM_BROKER_OPTS="--jvm-opts '-Xms4096m -Xmx4096m ${JVM_AGENT_OPTS} ${JVM_GC_OPTS}'" 
-export JVM_CONTAINER_OPTS="--jvm-opts '-Xms4096m -Xmx4096m ${JVM_AGENT_OPTS} ${JVM_GC_OPTS}'"
-export JVM_CONTENT_OPTS="--jvm-opts '-d64 -Xms16384m -Xmx16384m ${JVM_AGENT_OPTS} ${JVM_GC_OPTS}'"
+export JVM_APP_OPTS="--jvm-opts '-d64 -Xms16384m -Xmx16384m ${JVM_AGENT_OPTS} ${JVM_GC_OPTS}'"
 export JVM_FABRIC_OPTS="--jvm-opts '-Xms256m -Xmx512m ${JVM_AGENT_OPTS}'"
