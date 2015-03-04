@@ -26,11 +26,13 @@ if [[ $num_fabric_nodes = 2 || $num_fabric_nodes = 4 ]]; then
 	
 	for i in ${FABRIC_HOSTS[@]}; do
 		printf -v CONTAINER_COMMAND "fabric:container-create-ssh --host ${i} --path /opt/rh/containers --user fuse --profile fabric fabricserver-$i"
-		ssh fuse@$ROOT_NODE "set +x;$HOST_RH_HOME/scripts/commands/karaf-client.sh $DEPLOYMENT_ENVIRONMENT \"$CONTAINER_COMMAND\""
+		ssh fuse@$ROOT_NODE "set +x;$CLIENT_INVOCATION '$CONTAINER_COMMAND'"
                 wait_for_container fabricserver-$i
-
 		((fabric_host_num=fabric_host_num+1))
 	done
+	
+	## add admin user back temporarily to create ensemble
+	ssh fuse@$VAR_ROOT_NODE "set +x;$CLIENT_INVOCATION \"jaas:manage --realm karaf --module io.fabric8.jaas.ZookeeperLoginModule;useradd admin $ZOOKEEPER_PASSWD;roleadd admin admin;jaas:update\""
 
 	fabric_ensemble_string="fabric:ensemble-add -f "
 	
@@ -42,11 +44,14 @@ if [[ $num_fabric_nodes = 2 || $num_fabric_nodes = 4 ]]; then
 	done
 	
 	echo "Fabric Join String is :" $fabric_ensemble_string
-	ssh fuse@$ROOT_NODE "set +x;$HOST_RH_HOME/scripts/commands/karaf-client.sh $DEPLOYMENT_ENVIRONMENT \"$fabric_ensemble_string\""
+	ssh fuse@$ROOT_NODE "set +x;$CLIENT_INVOCATION '$fabric_ensemble_string'"
+
 	wait_for_ensemble
 fi
 
-# Create fabric version for release
-ssh fuse@$ROOT_NODE "set -x;$HOST_RH_HOME/scripts/commands/karaf-client.sh $DEPLOYMENT_ENVIRONMENT \"fabric:version-create --default $RELEASE_VERSION\""
+	## remove temp admin user
+	ssh fuse@$VAR_ROOT_NODE "set +x;$CLIENT_INVOCATION \"jaas:manage --realm karaf --module io.fabric8.jaas.ZookeeperLoginModule;userdel admin;jaas:update\""
 
+# Create fabric version for release
+ssh fuse@$ROOT_NODE "set -x;$CLIENT_INVOCATION 'fabric:version-create --default $RELEASE_VERSION'"
   

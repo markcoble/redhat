@@ -5,12 +5,11 @@ set +x
 if [ "$#" -lt 3 ]; then
     echo "Illegal number of parameters."
     echo "Usage: autoscale-container.sh (container-name prefix) (environment) (space separated profiles names to be attached to the container)"
-    echo "Example: autoscale-container.sh content-container sit-content mq-amq nitro-content-injector "
+    echo "Example: autoscale-container.sh application-container preprod mq-amq app-profile "
     exit 1
 fi
 
 . ./lib/helper_functions.sh
-karaf_commands
 
 set +x
 
@@ -32,6 +31,7 @@ container_name="$PREFIX-$IP"
 echo "Selected container name: $container_name"
 
 . ./envs/$DEPLOYMENT_ENVIRONMENT/environment.sh
+CLIENT_INVOCATION="$FUSE_HOME/bin/client -u $APP_ADMIN_USER -p $APP_ADMIN_PASSWD -r 60"
 
 find_fabric_node 
 if [ $? == "0" ]; then
@@ -45,7 +45,7 @@ SSH="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no fuse@$fabri
 echo $FUSE_HOME
 
 arg='$1'
-CLIENT_INVOCATION="$FUSE_HOME/bin/client -u $KARAF_USER -p $KARAF_PASSWORD -r 60"
+
 containers_info=$(timeout 15s $SSH $CLIENT_INVOCATION "container-list | grep -i $PREFIX | awk '{print $arg}; END {print empty}'")
 
 array=(${containers_info})

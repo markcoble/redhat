@@ -18,16 +18,15 @@ echo &id
 
 karaf_commands
 
+## create profiles 
 . ./destroy-and-deploy-clean-fabric.sh "$@"
 . ./create-app-profile.sh $APP_VERSION
-
+. ./create-app-broker-profile.sh "$@"
 
 ssh_update_git $ROOT_NODE $RELEASE_VERSION $DEPLOYMENT_ENVIRONMENT
 
-## deploy any clustered A-MQ brokers
+## deploy containers with profiles
 . ./deploy-brokers.sh "$@"
-
 . ./deploy-app.sh $APP_VERSION
-
 
 exit 0

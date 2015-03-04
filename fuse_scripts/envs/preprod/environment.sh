@@ -31,9 +31,13 @@ export BROKER_HOSTS=($amq_hosts)
 export HOST_RH_HOME=/opt/rh
 export HOST_FUSE_HOME=/opt/rh/fuse-latest
 export FUSE_HOME=/opt/rh/fuse-latest
+export TEMP_DIR=/tmp
+
+# Karaf and application user credentials
+export APP_ADMIN_USER=hawtio	
+export APP_ADMIN_PASSWD=hawtio
 export KARAF_USER=admin
 export KARAF_PASSWORD=admin
-export TEMP_DIR=/tmp
 
 # JVM Options
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0
